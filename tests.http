@@ -14,9 +14,15 @@ Content-Type: application/json
 {
     "titulo": "Rick and Morty",
     "descricao": "Avô e neto em altas aventuras interdimensionares",
-    "ano_lancamento": 2012
+    "ano_lancamento": 2013
 }
 
-### Obtenção de todas as séries
+### Obtenção de todas a séries
+
 GET {{base_url}}/series HTTP/1.1
 Accept: application/json
+
+### Atualizar séries
+PUT {{base_url}}/update/1 HTTP/1.1
+Accept: application/json
+
