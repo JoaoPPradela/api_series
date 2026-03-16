@@ -19,15 +19,17 @@ async def criar_serie(dados: SerieSchema, db: Session = Depends(get_db)):
 async def listar_series(db: Session = Depends(get_db)):
     return db.query(SerieModel).all()
 
-@serie.put('/update/{id}')
-async def atualizar_serie(id: int, titulo: str, descricao: str, ano_lancamento: int, db: Session = Depends(get_db)):
-    result = {'titulo': titulo, 'descricao': descricao, "ano_lancamento": ano_lancamento}
-    db.commit()
-    db.refresh(result)
-    return result
+# Tarefa: Crie as rotas de atualização e deleção da API
+@serie.put("/update/{id}")
+async def atualizar_serie(id: int, dados: SerieSchema, db: Session = Depends(get_db)):
+    serie = db.query(SerieModel).filter(SerieModel.id == id).first()
+    if not serie:
+        return ("Série não encontrada")
 
-    
-    
+    db.query(SerieModel).filter(SerieModel.id == id).update(dados.model_dump(exclude_unset=True))
+    db.commit()
+    return (dados)
+        
         
 @serie.delete('/delete/{id}')
 async def deletar_serie(id: int, db: Session = Depends(get_db)):
