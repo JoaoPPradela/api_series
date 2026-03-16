@@ -1,5 +1,3 @@
-from pickletools import read_bytes4
-import re
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -21,4 +19,28 @@ async def criar_serie(dados: SerieSchema, db: Session = Depends(get_db)):
 async def listar_series(db: Session = Depends(get_db)):
     return db.query(SerieModel).all()
 
-@serie.get('/atualizar')
+@serie.put('/update/{id}')
+async def atualizar_serie(id: int, titulo: str, descricao: str, ano_lancamento: int, db: Session = Depends(get_db)):
+    result = {'titulo': titulo, 'descricao': descricao, "ano_lancamento": ano_lancamento}
+    db.commit()
+    db.refresh(result)
+    return result
+
+    
+    
+        
+@serie.delete('/delete/{id}')
+async def deletar_serie(id: int, db: Session = Depends(get_db)):
+   id = db.query(SerieModel).filter(SerieModel.id == id).first()
+
+   if not id:
+       return ('Id não encontrado')
+   db.delete(id)
+   db.commit()
+   return('Pronto, id deletado')
+
+
+
+
+
+
